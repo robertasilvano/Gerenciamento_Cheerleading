@@ -2,7 +2,7 @@ import psycopg2
 import pandas as pd
 
 # seleciona as colunas da tabela escolhida
-def select_colunas(tabela):
+def get_column_names(tabela):
 
     # abre a conexão com o banco
     conn, cursor = connect()
@@ -39,6 +39,9 @@ def select_query(query, col_selecionadas_vetor):
     disconnect(conn, cursor)
 
     return df_select
+
+def insert_query(query, col_selecionadas_vetor):
+    print('a')
 
 # faz a conexão com o banco
 def connect():
