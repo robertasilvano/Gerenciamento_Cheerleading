@@ -1,1 +1,0 @@
-Trabalho desenvolvido para a matéria de Banco de Dados, com implementação de um sistema simples em python, para gerenciamento de um time de Cheerleading.
