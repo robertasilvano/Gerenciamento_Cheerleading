@@ -41,7 +41,16 @@ def select_query(query, col_selecionadas_vetor):
     return df_select
 
 def insert_query(query, col_selecionadas_vetor):
-    print('a')
+    # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # executa a query
+    cursor.execute(query)
+    conn.commit()
+    print('Insert finalizado!')
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
 
 # faz a conexão com o banco
 def connect():

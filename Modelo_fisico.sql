@@ -3,72 +3,72 @@
 
 CREATE TABLE Contato_Emergencia (
 telefone  VARCHAR(255),
-id_emergencia  INTEGER PRIMARY KEY,
+id_emergencia SERIAL PRIMARY KEY,
 nome VARCHAR(255),
-id_atleta INTEGER
+id_atleta SERIAL
 );
 
 CREATE TABLE Doenca  (
 descricao VARCHAR(255),
-id_doenca  INTEGER PRIMARY KEY
+id_doenca SERIAL PRIMARY KEY
 );
 
 CREATE TABLE Medicamento  (
-id_medicamento  INTEGER PRIMARY KEY,
+id_medicamento SERIAL PRIMARY KEY,
 nome VARCHAR(255),
 dose VARCHAR(255)
 );
 
 CREATE TABLE Efeito_Colateral  (
-id_efeito INTEGER PRIMARY KEY,
+id_efeito SERIAL PRIMARY KEY,
 descricao VARCHAR(255)
 );
 
 CREATE TABLE Projeto  (
-id_projeto  INTEGER PRIMARY KEY,
+id_projeto SERIAL PRIMARY KEY,
 descricao  VARCHAR(255),
 data TIMESTAMP
 );
 
 CREATE TABLE Alergia  (
 descricao  VARCHAR(255),
-id_alergia  INTEGER PRIMARY KEY
+id_alergia SERIAL PRIMARY KEY
 );
 
 CREATE TABLE Diretoria  (
-id_diretoria  INTEGER PRIMARY KEY,
+id_diretoria SERIAL PRIMARY KEY,
 cargo  VARCHAR(255),
-id_atleta INTEGER
+id_atleta SERIAL
 );
 
 CREATE TABLE atleta_medicamento  (
-id_atleta INTEGER,
-id_medicamento  INTEGER,
+id_atleta SERIAL,
+id_medicamento SERIAL,
 FOREIGN KEY(id_medicamento ) REFERENCES Medicamento  (id_medicamento)
 );
 
 CREATE TABLE medicamento_efeitocolateral (
-id_medicamento  INTEGER,
-id_efeito INTEGER,
+id_medicamento SERIAL,
+id_efeito SERIAL,
 FOREIGN KEY(id_medicamento ) REFERENCES Medicamento  (id_medicamento),
 FOREIGN KEY(id_efeito) REFERENCES Efeito_Colateral  (id_efeito)
 );
 
 CREATE TABLE atleta_alergia (
-id_atleta INTEGER,
-id_alergia  INTEGER,
+id_atleta SERIAL,
+id_alergia SERIAL,
 FOREIGN KEY(id_alergia ) REFERENCES Alergia  (id_alergia)
 );
 
 CREATE TABLE Evento  (
 local  VARCHAR(255),
-id_evento  INTEGER PRIMARY KEY,
+id_evento SERIAL PRIMARY KEY,
 data TIMESTAMP,
 descricao  VARCHAR(255)
 );
 
 CREATE TABLE Fluxo_Caixa (
-id_fluxo  INTEGER PRIMARY KEY,
+id_fluxo SERIAL PRIMARY KEY,
 descricao  VARCHAR(255),
 valor  NUMERIC(10),
 flag_entrada_saida NUMERIC(10),
@@ -76,54 +76,54 @@ data TIMESTAMP
 );
 
 CREATE TABLE evento_fluxocaixa (
-id_fluxo  INTEGER,
-id_evento  INTEGER,
+id_fluxo SERIAL,
+id_evento SERIAL,
 FOREIGN KEY(id_fluxo ) REFERENCES Fluxo_Caixa (id_fluxo),
 FOREIGN KEY(id_evento ) REFERENCES Evento  (id_evento)
 );
 
 CREATE TABLE atleta_fluxocaixa (
-id_atleta INTEGER,
-id_fluxo  INTEGER,
+id_atleta SERIAL,
+id_fluxo SERIAL,
 FOREIGN KEY(id_fluxo ) REFERENCES Fluxo_Caixa (id_fluxo)
 );
 
 CREATE TABLE Falta  (
-id_falta  INTEGER PRIMARY KEY,
+id_falta SERIAL PRIMARY KEY,
 descricao  VARCHAR(255),
 data TIMESTAMP,
-id_atleta INTEGER
+id_atleta SERIAL
 );
 
 CREATE TABLE doenca_atleta (
-id_atleta INTEGER,
-id_doenca  INTEGER,
+id_atleta SERIAL,
+id_doenca SERIAL,
 FOREIGN KEY(id_doenca ) REFERENCES Doenca  (id_doenca)
 );
 
 CREATE TABLE atleta_evento_posicao (
-id_atleta INTEGER,
-id_evento  INTEGER,
-id_posicao INTEGER,
+id_atleta SERIAL,
+id_evento SERIAL,
+id_posicao SERIAL,
 FOREIGN KEY(id_evento ) REFERENCES Evento  (id_evento)
 );
 
 CREATE TABLE diretoria_projeto (
-id_diretoria  INTEGER,
-id_projeto  INTEGER,
+id_diretoria SERIAL,
+id_projeto SERIAL,
 FOREIGN KEY(id_diretoria ) REFERENCES Diretoria  (id_diretoria),
 FOREIGN KEY(id_projeto ) REFERENCES Projeto  (id_projeto)
 );
 
 CREATE TABLE Skill (
-id_skill INTEGER PRIMARY KEY,
+id_skill SERIAL PRIMARY KEY,
 descricao  VARCHAR(255),
 nível VARCHAR(255)
 );
 
 CREATE TABLE atleta_skill (
-id_skill INTEGER,
-id_atleta INTEGER,
+id_skill SERIAL,
+id_atleta SERIAL,
 FOREIGN KEY(id_skill) REFERENCES Skill (id_skill)
 );
 
@@ -132,19 +132,19 @@ nome VARCHAR(255),
 nascimento  TIMESTAMP,
 telefone  VARCHAR(255),
 convenio VARCHAR(255),
-id_atleta INTEGER PRIMARY KEY,
+id_atleta SERIAL PRIMARY KEY,
 tipo_sangue VARCHAR(255),
 cpf VARCHAR(11)
 );
 
 CREATE TABLE atleta_posicao (
-id_atleta INTEGER,
-id_posicao INTEGER,
+id_atleta SERIAL,
+id_posicao SERIAL,
 FOREIGN KEY(id_atleta) REFERENCES Atleta (id_atleta)
 );
 
 CREATE TABLE Posicao (
-id_posicao INTEGER PRIMARY KEY,
+id_posicao SERIAL PRIMARY KEY,
 descricao VARCHAR(255)
 );
 
