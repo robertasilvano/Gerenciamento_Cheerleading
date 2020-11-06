@@ -1,6 +1,7 @@
 from sql import select_colunas, select_query
 
 def acao_select(tabela):
+    # seleciona todas colunas da tabela escolhida, e cria um menu para o usuário selecionar quais colunas quer dar o select
     df_colunas = select_colunas(tabela)
 
     print('\nÉ possível selecionar as seguintes colunas: ')
@@ -13,17 +14,19 @@ def acao_select(tabela):
 
     qtd_colunas_max = len(df_colunas.index)
 
+    # o usuário selecionou as colunas desejadas por números, mas é necessário transforma-los nas string correspondentes
     col_selecionadas_vetor = []
     for cont in range(qtd_colunas_max):
         if str(cont) in col_selecionadas_num:
             col_selecionadas_vetor.append(df_colunas.iloc[cont]['Coluna'])
 
+    # limpa o vetor pra ficar no formato da query do sql
     col_selecionadas_query = str(col_selecionadas_vetor).replace('[', '').replace(']', '').replace('\'', '')
 
+    # verifica se foi selecionada alguma coluna. se sim, define a query, e chama a função pra fazer o select no banco
     if col_selecionadas_query:
         query = f'SELECT {col_selecionadas_query} FROM {tabela}'
-
-    df = select_query(query, col_selecionadas_vetor)
+        df = select_query(query, col_selecionadas_vetor)
 
     print('RESULTADO: ')
     print(df)
@@ -38,6 +41,7 @@ def acao_delete(tabela):
 
 def escolher_acao(tabela):
 
+    # cria um dicionário das ações possíveis
     acao_dict = {
         1: 'SELECT',
         2: 'INSERT',
@@ -45,12 +49,14 @@ def escolher_acao(tabela):
         4: 'DELETE'
     }
     
+    # cria o menu das opções de ações disponíveis
     print('OPÇÕES DE AÇÕES: ')
     for acao in acao_dict:
         print(f'[{acao}] - {acao_dict[acao]}')
 
     acao_escolhida = int(input('\nEscolha a ação desejada: '))
 
+    # verifica qual ação foi escolhida e chama a função da mesma
     if acao_escolhida == 1:
         print(f'Você escolheu a opção [{acao_escolhida}] - {acao_dict[acao_escolhida]}')
         acao_select(tabela)

@@ -1,5 +1,6 @@
 def escolher_tabela():
 
+    # cria dicionario com todas as tabelas disponiveis no banco de dados
     tabela_dict = {
 
         1: 'alergia',
@@ -27,17 +28,20 @@ def escolher_tabela():
         23: 'skill'
     }
 
+    # percorre o dicionario, para criar um menu e o usuário escolher a tabela desejada
     print('OPÇÕES DE TABELA: ')
-    
     for tabela in tabela_dict:
         print(f'[{tabela}] - {tabela_dict[tabela]}')
 
+    
     tabela_escolhida = int(input('\nEscolha a tabela desejada: '))
 
+    # trata valores inválidos
     if tabela_escolhida < 1 or tabela_escolhida > 23:
         print('Você escolheu um valor inválido. Escolha novamente: ')
         escolher_tabela()
 
     print(f'Você escolheu a tabela [{tabela_escolhida}] - {tabela_dict[tabela_escolhida]}\n')
 
+    # retorna o nome da tabela escolhida
     return tabela_dict[tabela_escolhida]
