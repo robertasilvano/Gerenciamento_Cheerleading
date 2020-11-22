@@ -8,6 +8,26 @@ def get_column_names(tabela):
     conn, cursor = connect()
 
     # define a query para selecionar os nomes das colunas
+    query = f'SELECT column_name FROM information_schema.columns WHERE TABLE_NAME = \'{tabela}\''
+
+    # executa a query
+    cursor.execute(query)
+    colunas = cursor.fetchall()
+
+    # transforma o resultado em um dataframe 
+    df_colunas = pd.DataFrame(colunas, columns=['Coluna'])
+        
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
+    return df_colunas
+
+def get_column_datatypes(tabela):
+
+    # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # define a query para selecionar os nomes das colunas
     query = f'SELECT column_name, data_type FROM information_schema.columns WHERE TABLE_NAME = \'{tabela}\''
 
     # executa a query
@@ -15,12 +35,12 @@ def get_column_names(tabela):
     colunas = cursor.fetchall()
 
     # transforma o resultado em um dataframe 
-    df_colunas = pd.DataFrame(colunas, columns=['Coluna', 'Tipo de dado'])
+    df_datatype = pd.DataFrame(colunas, columns=['Coluna', 'Tipo'])
         
     # fecha a conexão com o banco
     disconnect(conn, cursor)
 
-    return df_colunas
+    return df_datatype
 
 # faz o select da tabela e colunas desejadas
 def select_query(query, col_selecionadas_vetor):
@@ -51,6 +71,46 @@ def insert_query(query, col_selecionadas_vetor):
     
     # fecha a conexão com o banco
     disconnect(conn, cursor)
+
+def select_index(tabela):
+     # abre a conexão com o banco
+    conn, cursor = connect()
+    
+    idcon = 'id_' + tabela
+
+    # executa a query
+    query = f'SELECT {idcon} FROM {tabela} WHERE {idcon} = (SELECT MAX({idcon}) FROM {tabela})'
+    print(query)
+    cursor.execute(query)
+    select = cursor.fetchall()
+
+    if select:
+        df_select = pd.DataFrame(select)
+        index = df_select.iloc[0][0]
+    else:
+        index=0
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
+    return index
+
+def select_nome_descricao(query):
+
+     # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # executa a query
+    cursor.execute(query)
+    select = cursor.fetchall()
+
+    # transforma o resultado em um dataframe
+    df_select = pd.DataFrame(select)
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
+    return df_select
 
 # faz a conexão com o banco
 def connect():
