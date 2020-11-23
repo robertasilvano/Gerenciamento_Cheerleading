@@ -6,19 +6,19 @@ FLUXO:
 4. Fazer as ações
 
 FAZER:
-1. colocar inicio() nos menus
-2. ver como faz pra tratar os tipos de dados -- não tem mais 
-3. ver como faz pra tratar as tabelas do meio na hora de dar insert/delete/update -
-4. ver sobre o auto increment -- feito
+1. colocar inicio() nos menus, voltar entre os menus
+2. [NÃO NECESSÁRIO] ver como faz pra tratar os tipos de dados 
+3. [FEITO] ver como faz pra tratar as tabelas do meio na hora de dar insert/delete/update -
+4. [FEITO] ver sobre o auto increment
 5. negrito
-6. verificar se foram inseridas duas colunas com valor igual no escolher_colunas
+6. [FEITO] verificar se foram inseridas duas colunas com valor igual no escolher_colunas
 7. dar uma melhorada na função escolher_colunas
 8. where no select
-9. voltar entre os menus
-10. tratativa no insert
-11. alterar os dict e o banco de dados p nome do select id
-12. mudar no banco cargo pra descricao
-13. where no update e delete
+8. tratativa no insert
+10. [FEITO] alterar os dict e o banco de dados p nome do select id
+11. [FEITO] mudar no banco cargo pra descricao
+12. where no update e delete
+13. Ver colunas not null
 '''
 
 from escolher_tabela import escolher_tabela

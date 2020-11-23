@@ -1,6 +1,27 @@
 import psycopg2
 import pandas as pd
 
+
+def get_table_names():
+
+    # abre a conexão com o banco
+    conn, cursor = connect()
+
+    query = 'SELECT table_name FROM information_schema.tables WHERE table_schema=\'public\' AND table_type=\'BASE TABLE\';'
+
+    # executa a query
+    cursor.execute(query)
+    tabelas = cursor.fetchall()
+
+    # transforma o resultado em um dataframe 
+    df_tabelas = pd.DataFrame(tabelas, columns=['Tabela']).sort_values('Tabela').reset_index()
+        
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
+    return df_tabelas
+
+
 # seleciona as colunas da tabela escolhida
 def get_column_names(tabela):
 
@@ -80,7 +101,6 @@ def select_index(tabela):
 
     # executa a query
     query = f'SELECT {idcon} FROM {tabela} WHERE {idcon} = (SELECT MAX({idcon}) FROM {tabela})'
-    print(query)
     cursor.execute(query)
     select = cursor.fetchall()
 

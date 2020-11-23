@@ -1,47 +1,26 @@
+from sql import get_table_names
+import pandas as pd
+
 def escolher_tabela():
+    bold_underline = '\033[1m \033[4m'
+    end_bold_underline = '\033[0m'
 
-    # cria dicionario com todas as tabelas disponiveis no banco de dados
-    tabela_dict = {
+    # cria um df com todas as tabelas disponiveis no banco de dados
+    df_tabelas = get_table_names()
 
-        1: 'alergia',
-        2: 'atleta',
-        3: 'atleta_alergia',
-        4: 'atleta_evento_posicao',
-        5: 'atleta_fluxocaixa',
-        6: 'atleta_medicamento',
-        7: 'atleta_posicao',
-        8: 'atleta_skill',
-        9: 'contato_Emergencia',
-        10: 'diretoria',
-        11: 'diretoria_projeto',
-        12: 'doenca',
-        13: 'doenca_atleta',
-        14: 'efeito_Colateral',
-        15: 'evento',
-        16: 'evento_fluxocaixa',
-        17: 'falta',
-        18: 'fluxo_Caixa',
-        19: 'medicamento',
-        20: 'medicamento_efeitocolateral',
-        21: 'posicao',
-        22: 'projeto',
-        23: 'skill'
-    }
-
-    # percorre o dicionario, para criar um menu e o usuário escolher a tabela desejada
+    # percorre o df_tabelas, para criar um menu e o usuário escolher a tabela desejada
     print('OPÇÕES DE TABELA: ')
-    for tabela in tabela_dict:
-        print(f'[{tabela}] - {tabela_dict[tabela]}')
-
+    for index, row in df_tabelas.iterrows():
+        print(f'[{index}] - ' + row['Tabela'])
     
     tabela_escolhida = int(input('\nEscolha a tabela desejada: '))
 
     # trata valores inválidos
-    if tabela_escolhida < 1 or tabela_escolhida > 23:
-        print('Você escolheu um valor inválido. Escolha novamente: ')
+    if tabela_escolhida < 0 or tabela_escolhida > 22:
+        print(f'{bold_underline}Você escolheu um valor inválido. Escolha novamente: {end_bold_underline}\n')
         escolher_tabela()
 
-    print(f'Você escolheu a tabela [{tabela_escolhida}] - {tabela_dict[tabela_escolhida]}\n')
+    print(f'Você escolheu a tabela {bold_underline}[{tabela_escolhida}] - ' + df_tabelas.iloc[tabela_escolhida]['Tabela'] + f'{end_bold_underline}\n')
 
     # retorna o nome da tabela escolhida
-    return tabela_dict[tabela_escolhida]
+    return df_tabelas.iloc[tabela_escolhida]['Tabela']
