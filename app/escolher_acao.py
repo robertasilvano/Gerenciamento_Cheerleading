@@ -129,13 +129,14 @@ def acao_update(tabela, col_selecionadas_query, col_selecionadas_vetor):
         print('Essa tabela está vazia\n')
 
     condition = int(input(f'\nInsira o id do registro(id_{tabela}) que você deseja dar update: '))
-    print(condition)
 
     print('Insira os valores atualizados: ')
     values = []    
     for col in col_selecionadas_vetor:
         if f'id_{tabela}' in col:
-            col_selecionadas_vetor.remove(col)
+            values.append(condition)
+        else:
+            value = input(f'{col.upper()}: ')
             values.append(value)
 
     query = f'UPDATE {tabela} SET '
@@ -143,9 +144,11 @@ def acao_update(tabela, col_selecionadas_query, col_selecionadas_vetor):
     for col in col_selecionadas_vetor:
         print(col)
         print(values[cont])
-        query = query + f'{col} = {values[cont]}'
+        query = query + f'{col} = \'{values[cont]}\', '
         cont += 1
 
+    query = query[:-2]
+    query = query + f' WHERE id_{tabela} = {condition}'
     update_query(query)
 
 
