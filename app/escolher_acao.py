@@ -1,4 +1,5 @@
-from sql import select_query, insert_query, select_index, select_nome_descricao
+from sql import select_query, insert_query, select_index, select_nome_descricao, get_column_names, delete_query, update_query
+from escolher_colunas import colunas_all
 
 # cria um menu para o usuário escolher a ação a ser executada sobre a tabela escolhida
 def escolher_acao(tabela, col_selecionadas_query, col_selecionadas_vetor):
@@ -115,6 +116,57 @@ def acao_insert(tabela, col_selecionadas_query, col_selecionadas_vetor):
             acao_insert(tabela, col_selecionadas_query, col_selecionadas_vetor)
 
 def acao_update(tabela, col_selecionadas_query, col_selecionadas_vetor):
-    print('u')
+
+    print('\nA tabela que você deseja dar update possui os seguintes dados: ')
+    colunas_query, colunas_vetor = colunas_all(tabela)
+    query = f'SELECT {colunas_query} FROM {tabela}'
+    df_all = select_query(query, colunas_vetor)
+    df_all = df_all.to_string(index=False)
+
+    if df_all:
+        print(df_all)
+    else:
+        print('Essa tabela está vazia\n')
+
+    condition = int(input(f'\nInsira o id do registro(id_{tabela}) que você deseja dar update: '))
+    print(condition)
+
+    print('Insira os valores atualizados: ')
+    values = []    
+    for col in col_selecionadas_vetor:
+        if f'id_{tabela}' in col:
+            col_selecionadas_vetor.remove(col)
+            values.append(value)
+
+    query = f'UPDATE {tabela} SET '
+    cont = 0
+    for col in col_selecionadas_vetor:
+        print(col)
+        print(values[cont])
+        query = query + f'{col} = {values[cont]}'
+        cont += 1
+
+    update_query(query)
+
+
 def acao_delete(tabela, col_selecionadas_query, col_selecionadas_vetor):
-    print('d')
+    print('\nA tabela que você deseja deletar contem os seguintes dados: ')
+    colunas_query, colunas_vetor = colunas_all(tabela)
+    query = f'SELECT {colunas_query} FROM {tabela}'
+    df_all = select_query(query, colunas_vetor)
+    df_all = df_all.to_string(index=False)
+    if df_all:
+        print(df_all)
+    else:
+        print('Essa tabela está vazia\n')
+
+    ldel = int(input('Insira o indentificador(id) do item que deseja deletar: '))
+    
+    lverif = str(input(f'\nTem certeza que deseja deletar a linha {ldel}? Y/N' ))
+    if(lverif == N or lverif == n):
+        escolher_acao(tabela, col_selecionadas_query, col_selecionadas_vetor)
+
+    
+    lquery = f'DELETE FROM {tabela} WHERE id_{tabela} = {ldel}'
+    delete_query(lquery)
+    print(f'Linha {ldel} deletada com sucesso! uel uel uel uel, novinha o pau de selfie do Bertie está o mel' )

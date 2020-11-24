@@ -81,6 +81,7 @@ def select_query(query, col_selecionadas_vetor):
 
     return df_select
 
+
 def insert_query(query, col_selecionadas_vetor):
     # abre a conexão com o banco
     conn, cursor = connect()
@@ -131,6 +132,31 @@ def select_nome_descricao(query):
     disconnect(conn, cursor)
 
     return df_select
+
+def update_query(query):
+    # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # executa a query
+    cursor.execute(query)
+    conn.commit()
+    print('Update finalizado!')
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
+def delete_query(query):
+    # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # executa a query
+    cursor.execute(query)
+    conn.commit()
+    print('Delete concluído!')
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
 
 # faz a conexão com o banco
 def connect():

@@ -13,8 +13,8 @@ FAZER:
 5. negrito
 6. [FEITO] verificar se foram inseridas duas colunas com valor igual no escolher_colunas
 7. dar uma melhorada na função escolher_colunas
-8. where no select
-8. tratativa no insert
+8. [IGNORATED] where no select
+8. [IGNORATED] tratativa no insert
 10. [FEITO] alterar os dict e o banco de dados p nome do select id
 11. [FEITO] mudar no banco cargo pra descricao
 12. where no update e delete
@@ -25,7 +25,6 @@ from escolher_tabela import escolher_tabela
 from escolher_colunas import escolher_colunas
 from escolher_acao import escolher_acao
 
-
 def inicio():
     # cria um menu para o usuário escolher sobre qual tabela quer trabalhar
     tabela = escolher_tabela()
@@ -35,5 +34,5 @@ def inicio():
 
     # cria um menu para o usuário escolher qual ação executar sobre a tabela
     escolher_acao(tabela, col_selecionadas_query, col_selecionadas_vetor)
-
+    
 inicio()
