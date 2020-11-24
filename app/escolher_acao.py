@@ -151,13 +151,13 @@ def acao_update(tabela, col_selecionadas_query, col_selecionadas_vetor):
     query = query + f' WHERE id_{tabela} = {condition}'
     update_query(query)
 
-
 def acao_delete(tabela, col_selecionadas_query, col_selecionadas_vetor):
     print('\nA tabela que você deseja deletar contem os seguintes dados: ')
     colunas_query, colunas_vetor = colunas_all(tabela)
     query = f'SELECT {colunas_query} FROM {tabela}'
     df_all = select_query(query, colunas_vetor)
     df_all = df_all.to_string(index=False)
+    
     if df_all:
         print(df_all)
     else:
@@ -165,11 +165,14 @@ def acao_delete(tabela, col_selecionadas_query, col_selecionadas_vetor):
 
     ldel = int(input('Insira o indentificador(id) do item que deseja deletar: '))
     
-    lverif = str(input(f'\nTem certeza que deseja deletar a linha {ldel}? Y/N' ))
-    if(lverif == N or lverif == n):
+    lverif = str(input(f'\nTem certeza que deseja deletar a linha {ldel}? [Y/N] ' ))
+    if(lverif == 'N' or lverif == 'n'):
         escolher_acao(tabela, col_selecionadas_query, col_selecionadas_vetor)
-
     
     lquery = f'DELETE FROM {tabela} WHERE id_{tabela} = {ldel}'
-    delete_query(lquery)
-    print(f'Linha {ldel} deletada com sucesso! uel uel uel uel, novinha o pau de selfie do Bertie está o mel' )
+
+    try:
+        delete_query(lquery)
+        print(f'Linha {ldel} deletada com sucesso!')
+    except:
+        print('Não é possível deletar essa linha porque está referenciada em outra tabela.')
