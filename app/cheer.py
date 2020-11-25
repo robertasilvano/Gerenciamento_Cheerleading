@@ -30,9 +30,17 @@ def inicio():
     tabela = escolher_tabela()
     
     # seleciona todas colunas da tabela escolhida, e cria um menu para o usuário selecionar quais colunas quer realizar a ação
-    col_selecionadas_query, col_selecionadas_vetor = escolher_colunas(tabela)
+    col_selecionadas_query, col _selecionadas_vetor = escolher_colunas(tabela)
 
     # cria um menu para o usuário escolher qual ação executar sobre a tabela
     escolher_acao(tabela, col_selecionadas_query, col_selecionadas_vetor)
     
-inicio()
+def main():
+    sair = False
+    while(1):
+        sair = inicio()
+
+        if sair == True:
+            return
+
+main()

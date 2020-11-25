@@ -163,13 +163,13 @@ def acao_delete(tabela, col_selecionadas_query, col_selecionadas_vetor):
     else:
         print('Essa tabela está vazia\n')
 
-    ldel = int(input('Insira o indentificador(id) do item que deseja deletar: '))
+    condition = int(input('Insira o indentificador(id) do item que deseja deletar: '))
     
     lverif = str(input(f'\nTem certeza que deseja deletar a linha {ldel}? [Y/N] ' ))
     if(lverif == 'N' or lverif == 'n'):
         escolher_acao(tabela, col_selecionadas_query, col_selecionadas_vetor)
     
-    lquery = f'DELETE FROM {tabela} WHERE id_{tabela} = {ldel}'
+    lquery = f'DELETE FROM {tabela} WHERE id_{tabela} = {condition}'
 
     try:
         delete_query(lquery)

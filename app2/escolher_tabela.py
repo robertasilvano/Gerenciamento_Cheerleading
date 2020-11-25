@@ -7,23 +7,26 @@ def escolher_tabela():
 
     # cria um df com todas as tabelas disponiveis no banco de dados
     df_tabelas = get_table_names()
+    qtd_tables = len(df_tabelas.index)
 
     # percorre o df_tabelas, para criar um menu e o usuário escolher a tabela desejada
     print('OPÇÕES DE TABELA: ')
     for index, row in df_tabelas.iterrows():
-        print(f'[{index+1}] - ' + row['Tabela'])
-    print('[0] - Sair')
+        print(f'[{index}] - ' + row['Tabela'])
+    print(f'[{qtd_tables+1}] - Sair')
     
     tabela_escolhida = int(input('\nEscolha a tabela desejada: '))
 
     # trata valores inválidos
-    if tabela_escolhida == 0:
-        return True
-    elif tabela_escolhida < 1 or tabela_escolhida > 22:
+    if tabela_escolhida == qtd_tables+1:
+        print(f'Você escolheu [{tabela_escolhida}] - Sair')
+        print('Encerrando o programa')
+        exit()
+    elif tabela_escolhida < 1 or tabela_escolhida > qtd_tables:
         print(f'{bold_underline}Você escolheu um valor inválido. Escolha novamente: {end_bold_underline}\n')
-        escolher_tabela()
+        return None, 'Play'
 
-    print(f'Você escolheu a tabela {bold_underline}[{tabela_escolhida}] - ' + df_tabelas.iloc[tabela_escolhida]['Tabela'] + f'{end_bold_underline}\n')
+    print(f'Você escolheu a tabela {bold_underline}[{tabela_escolhida}] - ' + df_tabelas.at[tabela_escolhida, 'Tabela'] + f'{end_bold_underline}\n')
 
     # retorna o nome da tabela escolhida
-    return df_tabelas.iloc[tabela_escolhida]['Tabela']
+    return df_tabelas.at[tabela_escolhida, 'Tabela'], 'Stop'
