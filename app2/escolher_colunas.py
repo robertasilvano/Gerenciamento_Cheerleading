@@ -43,3 +43,18 @@ def escolher_colunas(tabela):
     col_selecionadas_query = ', '.join(col_selecionadas_vetor)
 
     return col_selecionadas_query
+
+def colunas_all(tabela):
+  # pega o nome das colunas, cria o menu, e pega o input 
+    df_colunas = get_column_names(tabela)
+
+    col_selecionadas_num = '*'
+    qtd_colunas_max = len(df_colunas.index)
+
+    col_selecionadas_vetor = []
+    for cont in range(qtd_colunas_max):
+      col_selecionadas_vetor.append(df_colunas.iloc[cont]['Coluna'])
+
+    col_selecionadas_query = str(col_selecionadas_vetor).replace('[', '').replace(']', '').replace('\'', '')
+
+    return col_selecionadas_query, col_selecionadas_vetor

@@ -82,3 +82,79 @@ def select(query, colunas):
     disconnect(conn, cursor)
 
     return df_select
+
+def select_index(tabela):
+     # abre a conexão com o banco
+    conn, cursor = connect()
+    
+    idcon = 'id_' + tabela
+
+    # executa a query
+    query = f'SELECT {idcon} FROM {tabela} WHERE {idcon} = (SELECT MAX({idcon}) FROM {tabela})'
+    cursor.execute(query)
+    select = cursor.fetchall()
+
+    if select:
+        df_select = pd.DataFrame(select)
+        index = df_select.iloc[0][0]
+    else:
+        index=0
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
+    return index
+
+def select_tabela_estrangeira(query, colunas):
+
+     # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # executa a query
+    cursor.execute(query)
+    select = cursor.fetchall()
+
+    # transforma o resultado em um dataframe
+    df_select = pd.DataFrame(select, columns=colunas)
+    df_select.columns = df_select.columns.str.upper()
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
+    return df_select
+
+def insert(query, col_selecionadas_vetor):
+    # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # executa a query
+    cursor.execute(query)
+    conn.commit()
+    print('Insert finalizado!')
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
+def update(query):
+    # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # executa a query
+    cursor.execute(query)
+    conn.commit()
+    print('Update finalizado!')
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
+
+def delete(query):
+    # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # executa a query
+    cursor.execute(query)
+    conn.commit()
+    print('Delete concluído!')
+    
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)

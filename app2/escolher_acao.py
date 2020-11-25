@@ -1,5 +1,5 @@
 from escolher_colunas import escolher_colunas
-from acao import acao_select
+from acao import acao_select, acao_insert, acao_update, acao_delete
 
 # cria um menu para o usuário escolher a ação a ser executada sobre a tabela escolhida
 def escolher_acao(tabela):
@@ -35,17 +35,14 @@ def escolher_acao(tabela):
 
     elif acao_escolhida == 2:
         colunas = escolher_colunas(tabela)
-        #acao_insert(tabela, col_selecionadas_query, col_selecionadas_vetor)
-        print('i')
+        acao_insert(tabela, colunas)
 
     elif acao_escolhida == 3:
         colunas = escolher_colunas(tabela)
-        #acao_update(tabela, col_selecionadas_query, col_selecionadas_vetor)
-        print('u')
+        acao_update(tabela, colunas)
 
     elif acao_escolhida == 4:
-        #acao_delete(tabela, col_selecionadas_query, col_selecionadas_vetor)
-        print('d')
+        acao_delete(tabela)
 
     elif acao_escolhida == 5:
         print(f'Você escolheu [{acao_escolhida}] - Sair')
