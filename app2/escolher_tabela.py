@@ -10,7 +10,7 @@ def escolher_tabela():
     qtd_tables = len(df_tabelas.index)
 
     # percorre o df_tabelas, para criar um menu e o usuário escolher a tabela desejada
-    print('OPÇÕES DE TABELA: ')
+    print(f'{bold_underline}OPÇÕES DE TABELA: {end_bold_underline}')
     for index, row in df_tabelas.iterrows():
         print(f'[{index}] - ' + row['Tabela'])
     print(f'[{qtd_tables+1}] - Sair')
