@@ -6,11 +6,11 @@ FLUXO:
 3.2. DELETE
 
 FAZER:
-1. colocar inicio() nos menus, voltar entre os menus
+1. [FEITO] colocar inicio() nos menus, voltar entre os menus
 2. [NÃO NECESSÁRIO] ver como faz pra tratar os tipos de dados 
 3. [FEITO] ver como faz pra tratar as tabelas do meio na hora de dar insert/delete/update -
 4. [FEITO] ver sobre o auto increment
-5. negrito
+5. [FEITO] negrito
 6. [FEITO] verificar se foram inseridas duas colunas com valor igual no escolher_colunas
 7. [FEITO] dar uma melhorada na função escolher_colunas
 8. [IGNORATED] where no select
@@ -18,7 +18,11 @@ FAZER:
 10. [FEITO] alterar os dict e o banco de dados p nome do select id
 11. [FEITO] mudar no banco cargo pra descricao
 12. [FEITO] where no update e delete
-13. Ver colunas not null. ver o q acontece quando insere formato errado. ver o try/except no insert e no delete
+13. Ver update/delete nas tabelas do meio kkk
+14. Ver colunas not null
+15. Ver o q acontece quando insere formato errado
+16. Ver o try/except no insert e no delete
+17: Fazer mais de um insert/update/delete
 '''
 
 from escolher_tabela import escolher_tabela

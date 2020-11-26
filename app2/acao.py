@@ -19,6 +19,9 @@ def acao_select(tabela, colunas):
 
     else:
         print('Essa tabela está vazia\n')
+    
+    input('\nPressione enter para continuar\n')
+    return 'Tabelas'
 
 def acao_insert(tabela, colunas):
 
@@ -57,7 +60,9 @@ def acao_insert(tabela, colunas):
         try: 
             query = f'INSERT INTO {tabela} ({colunas}) values ({values})'
             print(query)
-            df = insert(query, colunas_vetor)
+            insert(query, colunas_vetor)
+            input("\nPresione enter para continuar\n")
+            return 'Tabelas'
         except:
             print('\nVocê inseriu um valor com formato errado. Insira novamente: ')
             acao_insert(tabela, colunas)
@@ -79,7 +84,8 @@ def acao_update(tabela, colunas):
         print(df_all)
     else:
         print('Essa tabela está vazia\n')
-        exit()
+        input('Pressione enter para continuar\n')
+        return 'Tabelas'
 
     condition = int(input(f'\nInsira o id do registro {bold_underline}(id_{tabela}){end_bold_underline} que você deseja dar update: '))
 
@@ -108,6 +114,8 @@ def acao_update(tabela, colunas):
     query = query[:-2]
     query = query + f' WHERE id_{tabela} = {condition}'
     update(query)
+    input("\nPresione enter para continuar\n")
+    return 'Tabelas'
 
 def acao_delete(tabela):
 
@@ -126,6 +134,8 @@ def acao_delete(tabela):
         print(df_all)
     else:
         print('Essa tabela está vazia\n')
+        input('Pressione enter para continuar\n')
+        return 'Tabelas'
 
     condition = int(input(f'\nInsira o id do registro {bold_underline}({id_tabela}){end_bold_underline} que você deseja deletar: '))
     
@@ -140,3 +150,5 @@ def acao_delete(tabela):
         print(f'{bold_underline}{id_tabela} = {condition}{end_bold_underline} deletada com sucesso!')
     except:
         print('Não é possível deletar essa linha porque está referenciada em outra tabela.')
+        input('Pressione enter para continuar\n')
+        return 'Tabelas'

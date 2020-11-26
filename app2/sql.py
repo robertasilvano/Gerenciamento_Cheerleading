@@ -135,6 +135,8 @@ def insert(query, col_selecionadas_vetor):
     # fecha a conexão com o banco
     disconnect(conn, cursor)
 
+    return
+
 def update(query):
     # abre a conexão com o banco
     conn, cursor = connect()
@@ -146,6 +148,8 @@ def update(query):
     
     # fecha a conexão com o banco
     disconnect(conn, cursor)
+
+    return
 
 def delete(query):
     # abre a conexão com o banco

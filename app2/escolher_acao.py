@@ -40,18 +40,35 @@ def escolher_acao(tabela):
             return 'Tabelas'
         elif flag == 'Ações':
             return 'Play'
+
         acao_select(tabela, colunas)
+        return 'Tabelas'
 
     elif acao_escolhida == 2:
         colunas, flag = escolher_colunas(tabela)
+
+        if flag == 'Tabelas':
+            return 'Tabelas'
+        elif flag == 'Ações':
+            return 'Play'
+
         acao_insert(tabela, colunas)
+        return 'Tabelas'
 
     elif acao_escolhida == 3:
         colunas, flag = escolher_colunas(tabela)
+
+        if flag == 'Tabelas':
+            return 'Tabelas'
+        elif flag == 'Ações':
+            return 'Play'
+            
         acao_update(tabela, colunas)
+        return 'Tabelas'
 
     elif acao_escolhida == 4:
         acao_delete(tabela)
+        return 'Tabelas'
 
     elif acao_escolhida == 5:
         print(f'Você escolheu [{acao_escolhida}] - Sair')
