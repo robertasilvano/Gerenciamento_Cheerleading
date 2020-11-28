@@ -67,4 +67,4 @@ def colunas_all(tabela):
 
     col_selecionadas_query = str(col_selecionadas_vetor).replace('[', '').replace(']', '').replace('\'', '')
 
-    return col_selecionadas_query, col_selecionadas_vetor
+    return col_selecionadas_query

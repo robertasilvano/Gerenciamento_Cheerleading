@@ -1,6 +1,7 @@
 from sql import select, select_index, insert, update, delete
 from escolher_colunas import colunas_all
 from tabela_estrangeira import tabela_estrangeira
+import psycopg2
 
 def acao_select(tabela, colunas):
 
@@ -59,13 +60,29 @@ def acao_insert(tabela, colunas):
     if values:
         try: 
             query = f'INSERT INTO {tabela} ({colunas}) values ({values})'
-            print(query)
             insert(query, colunas_vetor)
-            input("\nPresione enter para continuar\n")
-            return 'Tabelas'
-        except:
-            print('\nVocê inseriu um valor com formato errado. Insira novamente: ')
-            acao_insert(tabela, colunas)
+            
+            verif = str(input(f'\n Deseja dar insert em outro registro desta mesma tabela? [Y/N] ' ))
+            if(verif == 'Y' or verif == 'y'):
+                acao_insert(tabela, colunas)
+            else:
+                input('\nPressione enter para continuar\n')
+                return 'Tabelas'
+        except psycopg2.Error as e:
+            if e.pgcode == '22007':
+                print(f'\nVocê inseriu um campo de data com o formato errado. Insira novamente no formato {bold_underline}dd/mm/aaaa{end_bold_underline}.')
+                input('\nPressione enter para continuar\n')
+                acao_insert(tabela, colunas)
+            if e.pgcode == '22P02':
+                print(f'\nVocê inseriu um campo de número com o formato errado. Insira novamente.')
+                input('\nPressione enter para continuar\n')
+                acao_insert(tabela, colunas)
+            elif e.pgcode == '22001':
+                print(f'\nVocê inseriu caracteres demais em um campo. Insira novamente.')
+                input('\nPressione enter para continuar\n')
+                acao_insert(tabela, colunas)
+            else:
+                print('Ocorreu algum erro! Encerrando o programa.')
 
 def acao_update(tabela, colunas):
 
@@ -87,7 +104,14 @@ def acao_update(tabela, colunas):
         input('Pressione enter para continuar\n')
         return 'Tabelas'
 
-    condition = int(input(f'\nInsira o id do registro {bold_underline}(id_{tabela}){end_bold_underline} que você deseja dar update: '))
+    condition = []
+    if id_tabela in colunas_vetor:
+        value = int(input(f'\nInsira o id do registro {bold_underline}({id_tabela}){end_bold_underline} que você deseja dar update: '))
+        condition.append(value)
+    else:
+        for coluna in colunas_vetor:
+            value = int(input(f'\nInsira o id do registro {bold_underline}({coluna}){end_bold_underline} que você deseja dar update: '))
+            condition.append(value)
 
     tabela_estrangeira(colunas_vetor, tabela, id_tabela, 'o update!')
 
@@ -101,21 +125,51 @@ def acao_update(tabela, colunas):
         else:
             value = input(f'{col.upper()}: ')
             values.append(value)
-
+        
+    count = 0
     query = f'UPDATE {tabela} SET '
-    cont = 0
     for col in colunas_selecionadas_vetor:
         if col == id_tabela:
             continue
         else:
-            query = query + f'{col} = \'{values[cont]}\', '
-            cont += 1
+            query = query + f'{col} = \'{values[count]}\', '
+            count += 1
 
     query = query[:-2]
-    query = query + f' WHERE id_{tabela} = {condition}'
-    update(query)
-    input("\nPresione enter para continuar\n")
-    return 'Tabelas'
+    count = 0
+    if id_tabela in colunas_vetor:
+        query = query + f' WHERE id_{tabela} = {condition[count]}'
+    else:
+        query = query + 'WHERE '
+        for item in colunas_vetor:
+            query = query + f'{item} = {condition[count]} AND '
+            count+=1
+        query = query[:-5]
+
+    try:
+        update(query)
+        verif = str(input(f'\n\n Deseja dar update em outro registro desta mesma tabela? [Y/N] ' ))
+        if(verif == 'Y' or verif == 'y'):
+            acao_update(tabela, colunas)
+        else:
+            input('\nPressione enter para continuar\n')
+            return 'Tabelas'
+    except psycopg2.Error as e:
+            if e.pgcode == '22007':
+                print(f'\nVocê inseriu um campo de data com o formato errado. Insira novamente no formato {bold_underline}dd/mm/aaaa{end_bold_underline}.')
+                input('\nPressione enter para continuar\n')
+                acao_update(tabela, colunas)
+            elif e.pgcode == '22P02':
+                print(f'\nVocê inseriu um campo de número com o formato errado. Insira novamente.')
+                input('\nPressione enter para continuar\n')
+                acao_update(tabela, colunas)
+            elif e.pgcode == '22001':
+                print(f'\nVocê inseriu caracteres demais em um campo. Insira novamente.')
+                input('\nPressione enter para continuar\n')
+                acao_update(tabela, colunas)
+            else:
+                print('Ocorreu algum erro! Encerrando o programa.')
+    
 
 def acao_delete(tabela):
 
@@ -125,8 +179,9 @@ def acao_delete(tabela):
     id_tabela = 'id_' + tabela
 
     print(f'\nA tabela {tabela} contem os seguintes dados: ')
-    colunas_query, colunas_vetor = colunas_all(tabela)
+    colunas_query = colunas_all(tabela)
     query = f'SELECT {colunas_query} FROM {tabela}'
+    colunas_vetor = colunas_query.split(', ')
     df_all = select(query, colunas_vetor)
     df_all = df_all.to_string(index=False)
     
@@ -137,18 +192,45 @@ def acao_delete(tabela):
         input('Pressione enter para continuar\n')
         return 'Tabelas'
 
-    condition = int(input(f'\nInsira o id do registro {bold_underline}({id_tabela}){end_bold_underline} que você deseja deletar: '))
-    
+    condition = []
+    if id_tabela in colunas_vetor:
+        value = int(input(f'\nInsira o id do registro {bold_underline}({id_tabela}){end_bold_underline} que você deseja deletar: '))
+        condition.append(value)
+    else:
+        for coluna in colunas_vetor:
+            value = int(input(f'\nInsira o id do registro {bold_underline}({coluna}){end_bold_underline} que você deseja deletar: '))
+            condition.append(value)
+  
     verif = str(input(f'\nTem certeza que deseja deletar {bold_underline}{id_tabela} = {condition}{end_bold_underline}? [Y/N] ' ))
     if(verif == 'N' or verif == 'n'):
-        exit()
+        return 'Tabelas'
     
-    query = f'DELETE FROM {tabela} WHERE {id_tabela} = {condition}'
+    count = 0
+    query = f'DELETE FROM {tabela} WHERE '
+    for item in colunas_vetor:
+        if 'id_' in item:
+            query = query + f'{item} = {condition[count]} AND '
+            count+=1
 
+    query = query[:-5]
     try:
         delete(query)
-        print(f'{bold_underline}{id_tabela} = {condition}{end_bold_underline} deletada com sucesso!')
-    except:
-        print('Não é possível deletar essa linha porque está referenciada em outra tabela.')
-        input('Pressione enter para continuar\n')
-        return 'Tabelas'
+        print(f'{bold_underline}{id_tabela} = {condition}{end_bold_underline} deletada com sucesso!\n')
+        verif = str(input(f'\n Deseja deletar outro registro desta mesma tabela? [Y/N] ' ))
+        if(verif == 'Y' or verif == 'y'):
+            acao_delete(tabela, colunas)
+        else:
+            input('\nPressione enter para continuar\n')
+            return 'Tabelas'
+    except psycopg2.Error as e:
+        if e.pgcode == '22P02':
+                print(f'\nVocê inseriu um campo de número com o formato errado. Insira novamente.')
+                input('\nPressione enter para continuar\n')
+                acao_delete(tabela, colunas)
+        elif e.pgcode == '23503':
+            print('Não é possível deletar essa linha porque está referenciada em outra tabela.')
+            input('\nPressione enter para continuar\n')
+            return 'Tabelas'
+        else:
+            print('Ocorreu algum erro! Encerrando o programa.')
+

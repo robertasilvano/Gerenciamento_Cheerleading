@@ -18,11 +18,25 @@ FAZER:
 10. [FEITO] alterar os dict e o banco de dados p nome do select id
 11. [FEITO] mudar no banco cargo pra descricao
 12. [FEITO] where no update e delete
-13. Ver update/delete nas tabelas do meio kkk
-14. Ver colunas not null
-15. Ver o q acontece quando insere formato errado
-16. Ver o try/except no insert e no delete
-17: Fazer mais de um insert/update/delete
+13. [FEITO] Ver update/delete nas tabelas do meio kkk
+14. [FEITO] Ver colunas not null
+15. [FEITO] Ver o q acontece quando insere formato errado
+16. [FEITO] Ver o try/except no insert e no delete
+17: [FEITO] Fazer mais de um insert/update/delete
+18. [FEITO] As tabelas do meio só tão com chave estrangeira
+19. Colocar chaves primarias nas tabelas estrangeiras e colocar todas as colunas como not null
+
+
+valores que podem ser add errados:
+TABELA - CAMPO
+skill - nivel
+atleta - nascimento
+projeto - data
+falta - data
+evento - data
+fluxo_caixa - valor, data, flag_entrada_saida
+
+integer/decimal/timestamp
 '''
 
 from escolher_tabela import escolher_tabela

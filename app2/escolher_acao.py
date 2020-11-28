@@ -1,4 +1,4 @@
-from escolher_colunas import escolher_colunas
+from escolher_colunas import escolher_colunas, colunas_all
 from acao import acao_select, acao_insert, acao_update, acao_delete
 
 # cria um menu para o usuário escolher a ação a ser executada sobre a tabela escolhida
@@ -45,13 +45,7 @@ def escolher_acao(tabela):
         return 'Tabelas'
 
     elif acao_escolhida == 2:
-        colunas, flag = escolher_colunas(tabela)
-
-        if flag == 'Tabelas':
-            return 'Tabelas'
-        elif flag == 'Ações':
-            return 'Play'
-
+        colunas = colunas_all(tabela)
         acao_insert(tabela, colunas)
         return 'Tabelas'
 
