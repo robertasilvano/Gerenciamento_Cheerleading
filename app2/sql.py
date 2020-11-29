@@ -130,7 +130,6 @@ def insert(query, col_selecionadas_vetor):
     # executa a query
     cursor.execute(query)
     conn.commit()
-    print('Insert finalizado!')
     
     # fecha a conexão com o banco
     disconnect(conn, cursor)
@@ -144,7 +143,6 @@ def update(query):
     # executa a query
     cursor.execute(query)
     conn.commit()
-    print('Update finalizado!')
     
     # fecha a conexão com o banco
     disconnect(conn, cursor)
@@ -158,7 +156,6 @@ def delete(query):
     # executa a query
     cursor.execute(query)
     conn.commit()
-    print('Delete concluído!')
     
     # fecha a conexão com o banco
     disconnect(conn, cursor)

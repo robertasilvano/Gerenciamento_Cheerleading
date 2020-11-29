@@ -24,19 +24,14 @@ FAZER:
 16. [FEITO] Ver o try/except no insert e no delete
 17: [FEITO] Fazer mais de um insert/update/delete
 18. [FEITO] As tabelas do meio só tão com chave estrangeira
-19. Colocar chaves primarias nas tabelas estrangeiras e colocar todas as colunas como not null
-
-
-valores que podem ser add errados:
-TABELA - CAMPO
-skill - nivel
-atleta - nascimento
-projeto - data
-falta - data
-evento - data
-fluxo_caixa - valor, data, flag_entrada_saida
-
-integer/decimal/timestamp
+19. [EFEITO] Colocar chaves primarias nas tabelas estrangeiras e colocar todas as colunas como not null
+20. [FEITO] Inserir dados para testar
+21. [FEITO] Fazer as querys com 3 tabelas
+22. [FEITO] Fazer os gráficos
+23. Terminar relatório
+24. Fazer apresentação
+25. Reordenar tabelas
+26. [FEITO] print dps de inserir
 '''
 
 from escolher_tabela import escolher_tabela
@@ -61,4 +56,4 @@ def main():
     flag = 'Play'
     acao(tabela, flag)
 
-main()
+main() 

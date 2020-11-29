@@ -47,7 +47,7 @@ def escolher_colunas(tabela):
         if str(cont) in col_selecionadas_num:
           col_selecionadas_vetor.append(df_colunas.iloc[cont]['Coluna'])
 
-    print(f'\nAs colunas selecionadas foram: {bold_underline}{col_selecionadas_vetor}{end_bold_underline}') 
+    print(f'\nAs colunas que você selecionou foram: {bold_underline}{col_selecionadas_vetor}{end_bold_underline}') 
 
     # limpa o vetor pra ficar no formato da query do sql
     col_selecionadas_query = ', '.join(col_selecionadas_vetor)

@@ -8,10 +8,12 @@ def acao_select(tabela, colunas):
     bold_underline = '\033[1m \033[4m'
     end_bold_underline = '\033[0m'
 
+
     # define a query, e chama a função pra fazer o select no banco
-    query = f'SELECT {colunas} FROM {tabela}'
-    colunas = colunas.split(',')
-    df_select = select(query, colunas)
+    id_tabela = 'id_' + tabela
+    query = f'SELECT {colunas} FROM {tabela} ORDER BY {id_tabela}'
+    colunas_vetor = colunas.split(', ')
+    df_select = select(query, colunas_vetor)
     print(f'\n{bold_underline}RESULTADO: {end_bold_underline}\n')
 
     if not df_select.empty:
@@ -19,7 +21,7 @@ def acao_select(tabela, colunas):
         print('\n')
 
     else:
-        print('Essa tabela está vazia\n')
+        print(f'{bold_underline}Essa tabela está vazia{end_bold_underline}\n')
     
     input('\nPressione enter para continuar\n')
     return 'Tabelas'
@@ -37,6 +39,8 @@ def acao_insert(tabela, colunas):
     if id_tabela in colunas:
         index = select_index(tabela)
 
+    print(f'{bold_underline}A tabela {tabela}, que você deseja fazer inserção possui os seguintes dados:{end_bold_underline}')
+    acao_select(tabela, colunas)
     colunas_vetor = colunas.split(', ')
     tabela_estrangeira(colunas_vetor, tabela, id_tabela, 'a inserção!')
 
@@ -61,6 +65,7 @@ def acao_insert(tabela, colunas):
         try: 
             query = f'INSERT INTO {tabela} ({colunas}) values ({values})'
             insert(query, colunas_vetor)
+            print('Insert realizado com sucesso!')
             
             verif = str(input(f'\n Deseja dar insert em outro registro desta mesma tabela? [Y/N] ' ))
             if(verif == 'Y' or verif == 'y'):
@@ -73,7 +78,7 @@ def acao_insert(tabela, colunas):
                 print(f'\nVocê inseriu um campo de data com o formato errado. Insira novamente no formato {bold_underline}dd/mm/aaaa{end_bold_underline}.')
                 input('\nPressione enter para continuar\n')
                 acao_insert(tabela, colunas)
-            if e.pgcode == '22P02':
+            elif e.pgcode == '22P02':
                 print(f'\nVocê inseriu um campo de número com o formato errado. Insira novamente.')
                 input('\nPressione enter para continuar\n')
                 acao_insert(tabela, colunas)
@@ -81,8 +86,18 @@ def acao_insert(tabela, colunas):
                 print(f'\nVocê inseriu caracteres demais em um campo. Insira novamente.')
                 input('\nPressione enter para continuar\n')
                 acao_insert(tabela, colunas)
+            elif e.pgcode == '23503':
+                print(f'\nVocê inseriu um valor inválido de ID. Insira novamente.')
+                input('\nPressione enter para continuar\n')
+                acao_insert(tabela, colunas)
+            elif e.pgcode == '23505':
+                print(f'\nEsse valor já está na tabela. Insira outro.')
+                input('\nPressione enter para continuar\n')
+                acao_insert(tabela, colunas)
             else:
-                print('Ocorreu algum erro! Encerrando o programa.')
+                print('Ocorreu algum erro! Retornando para o menu de tabela!\n')
+                input('\nPressione enter para continuar\n')
+            return 'Tabelas'
 
 def acao_update(tabela, colunas):
 
@@ -92,15 +107,15 @@ def acao_update(tabela, colunas):
     id_tabela = 'id_' + tabela
 
     print(f'\n{bold_underline}A tabela que você deseja dar update possui os seguintes dados: {end_bold_underline}')
-    colunas_query, colunas_vetor = colunas_all(tabela)
+    colunas_query = colunas_all(tabela)
     query = f'SELECT {colunas_query} FROM {tabela}'
+    colunas_vetor = colunas_query.split(', ')
     df_all = select(query, colunas_vetor)
-    df_all = df_all.to_string(index=False)
 
-    if df_all:
-        print(df_all)
+    if not df_all.empty:
+        print(df_all.to_string(index=False))
     else:
-        print('Essa tabela está vazia\n')
+        print('Essa tabela está vazia, não é possível fazer update!\n')
         input('Pressione enter para continuar\n')
         return 'Tabelas'
 
@@ -148,6 +163,7 @@ def acao_update(tabela, colunas):
 
     try:
         update(query)
+        print('Update realizado com sucesso!')
         verif = str(input(f'\n\n Deseja dar update em outro registro desta mesma tabela? [Y/N] ' ))
         if(verif == 'Y' or verif == 'y'):
             acao_update(tabela, colunas)
@@ -168,9 +184,10 @@ def acao_update(tabela, colunas):
                 input('\nPressione enter para continuar\n')
                 acao_update(tabela, colunas)
             else:
-                print('Ocorreu algum erro! Encerrando o programa.')
+                print('Ocorreu algum erro! Retornando para o menu de tabela!\n')
+                input('\nPressione enter para continuar\n')
+            return 'Tabelas'
     
-
 def acao_delete(tabela):
 
     bold_underline = '\033[1m \033[4m'
@@ -183,12 +200,11 @@ def acao_delete(tabela):
     query = f'SELECT {colunas_query} FROM {tabela}'
     colunas_vetor = colunas_query.split(', ')
     df_all = select(query, colunas_vetor)
-    df_all = df_all.to_string(index=False)
     
-    if df_all:
-        print(df_all)
+    if not df_all.empty:
+        print(df_all.to_string(index=False))
     else:
-        print('Essa tabela está vazia\n')
+        print('Essa tabela está vazia, não é possível realizar um delete!\n')
         input('Pressione enter para continuar\n')
         return 'Tabelas'
 
@@ -205,20 +221,26 @@ def acao_delete(tabela):
     if(verif == 'N' or verif == 'n'):
         return 'Tabelas'
     
-    count = 0
-    query = f'DELETE FROM {tabela} WHERE '
-    for item in colunas_vetor:
-        if 'id_' in item:
-            query = query + f'{item} = {condition[count]} AND '
-            count+=1
+    if id_tabela in colunas_vetor:
+        query = f'DELETE FROM {tabela} WHERE {id_tabela} = {condition[0]}'
+    else:
+        count = 0
+        query = f'DELETE FROM {tabela} WHERE '
+        for item in colunas_vetor:
+            if 'id_' in item:
+                query = query + f'{item} = {condition[count]} AND '
+                count+=1
+        query = query[:-5]
 
-    query = query[:-5]
     try:
         delete(query)
-        print(f'{bold_underline}{id_tabela} = {condition}{end_bold_underline} deletada com sucesso!\n')
+        if id_tabela in colunas_vetor:
+            print(f'{bold_underline}{id_tabela} = {condition}{end_bold_underline} deletada com sucesso!\n')
+        else:
+            print(f'{bold_underline}{condition}{end_bold_underline} deletada com sucesso!\n')
         verif = str(input(f'\n Deseja deletar outro registro desta mesma tabela? [Y/N] ' ))
         if(verif == 'Y' or verif == 'y'):
-            acao_delete(tabela, colunas)
+            acao_delete(tabela)
         else:
             input('\nPressione enter para continuar\n')
             return 'Tabelas'
@@ -228,9 +250,28 @@ def acao_delete(tabela):
                 input('\nPressione enter para continuar\n')
                 acao_delete(tabela, colunas)
         elif e.pgcode == '23503':
-            print('Não é possível deletar essa linha porque está referenciada em outra tabela.')
+            tabela_ref = str(e.pgerror).split('\"')[-2]
+            print(f'Não é possível deletar essa linha porque está referenciada na tabela {bold_underline}{tabela_ref}{end_bold_underline}.')
             input('\nPressione enter para continuar\n')
-            return 'Tabelas'
         else:
-            print('Ocorreu algum erro! Encerrando o programa.')
+            print('Ocorreu algum erro! Retornando para o menu de tabela!\n')
+            input('\nPressione enter para continuar\n')
+        return 'Tabelas'
 
+def acao_espec(query, colunas):
+
+    bold_underline = '\033[1m \033[4m'
+    end_bold_underline = '\033[0m'
+
+    df_select = select(query, colunas)
+    print(f'\n{bold_underline}RESULTADO: {end_bold_underline}\n')
+
+    if not df_select.empty:
+        print(df_select.to_string(index=False))
+        print('\n')
+
+    else:
+        print(f'{bold_underline}Essa tabela está vazia{end_bold_underline}\n')
+    
+    input('\nPressione enter para continuar\n')
+    return 'Tabelas'

@@ -1,5 +1,5 @@
 from escolher_colunas import escolher_colunas, colunas_all
-from acao import acao_select, acao_insert, acao_update, acao_delete
+from acao import acao_select, acao_insert, acao_update, acao_delete, acao_espec
 
 # cria um menu para o usuário escolher a ação a ser executada sobre a tabela escolhida
 def escolher_acao(tabela):
@@ -13,8 +13,11 @@ def escolher_acao(tabela):
         2: 'INSERT',
         3: 'UPDATE',
         4: 'DELETE',
-        5: 'SAIR',
-        6: 'RETORNAR AO MENU DE TABELAS'
+        5: 'CONSULTA ESPECÍFICA 1: Quantos atletas existem em cada posição',
+        6: 'CONSULTA ESPECÍFICA 2: Quantidade de projetos que cada diretoria tem',
+        7: 'CONSULTA ESPECÍFICA 3: Média da mensalidade de cada atleta que possua média maior que R$20.00',
+        8: 'SAIR',
+        9: 'RETORNAR AO MENU DE TABELAS'
     }
     
     # cria o menu das opções de ações disponíveis
@@ -24,10 +27,10 @@ def escolher_acao(tabela):
 
     acao_escolhida = int(input('\nEscolha a ação desejada: '))
 
-    if acao_escolhida == 6:
+    if acao_escolhida == 9:
         return 'Tabelas'
 
-    elif acao_escolhida < 1 or acao_escolhida > 5:
+    elif acao_escolhida < 1 or acao_escolhida > 9:
         print(f'\n{bold_underline}Opção inválida! Escolha novamente.{end_bold_underline}')
         return 'Play'
 
@@ -65,6 +68,44 @@ def escolher_acao(tabela):
         return 'Tabelas'
 
     elif acao_escolhida == 5:
-        print(f'Você escolheu [{acao_escolhida}] - Sair')
+        query = '''
+        SELECT p.descricao AS posicao, count(a.id_atleta) AS qtd_atleta,
+        string_agg(a.nome, ', ') AS atletas FROM atleta_posicao AS ap
+        LEFT JOIN atleta AS a ON a.id_atleta = ap.id_atleta
+        LEFT JOIN posicao AS p ON p.id_posicao = ap.id_posicao
+        GROUP BY p.descricao
+        ORDER BY p.descricao;
+        '''
+        colunas = ['posição', 'qtd_atleta', 'atletas']
+        acao_espec(query, colunas)
+        return 'Tabelas'
+        
+    elif acao_escolhida == 6:
+        query = '''
+        SELECT d.descricao AS diretoria, count(p.id_projeto) AS qtd_projeto,
+        string_agg(p.descricao, ', ') AS projetos FROM diretoria AS d
+        LEFT JOIN diretoria_projeto AS dp ON dp.id_diretoria = d.id_diretoria
+        LEFT JOIN projeto AS p ON p.id_projeto = dp.id_projeto
+        GROUP BY d.descricao
+        ORDER BY d.descricao;
+        '''
+        colunas = ['diretoria', 'qtd_projeto', 'projetos']
+        acao_espec(query, colunas)
+        return 'Tabelas'
+
+    elif acao_escolhida == 7:
+        query = '''
+        SELECT a.nome, avg(fc.valor) AS media_mensalidade FROM atleta AS a
+        LEFT JOIN atleta_fluxo_caixa AS afc ON afc.id_atleta = a.id_atleta
+        LEFT JOIN fluxo_caixa AS fc ON fc.id_fluxo_caixa = afc.id_fluxo_caixa
+        WHERE fc.descricao = 'mensalidade'
+        GROUP BY a.nome
+        HAVING avg(fc.valor) > 20 ORDER BY a.nome;
+        '''
+        colunas = ['nome', 'media_mensalidade']
+        acao_espec(query, colunas)
+        return 'Tabelas'
+
+    elif acao_escolhida == 8:
         print('Encerrando o programa')
         exit()
