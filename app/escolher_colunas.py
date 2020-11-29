@@ -10,7 +10,7 @@ def escolher_colunas(tabela):
     df_colunas = get_column_names(tabela)
 
     col_id = ''
-    print('\nÉ possível selecionar as seguintes colunas: ')
+    print(f'\nÉ possível selecionar as seguintes {bold_underline}colunas da tabela {tabela}{end_bold_underline}. [Colunas id são selecionadas automaticamente]: ')
     print('[*] - Todas')
     for index, row in df_colunas.iterrows():
         if 'id_' not in row['Coluna']:
@@ -18,8 +18,18 @@ def escolher_colunas(tabela):
         else:
           print('[{0}] - {1}'.format(index, row['Coluna']))
           col_id = col_id + str(index)
+    print(f'[{index+1}] - Voltar ao menu de tabelas')
+    print(f'[{index+2}] - Voltar ao menu de ações')
     
     col_selecionadas_num = input(f'\nInsira o número das colunas que você deseja selecionar no formato {bold_underline}número_coluna1, número_coluna2, etc. Por exemplo: 1, 2, 3{end_bold_underline} [Valores inválidos são ignorados]:')
+    print('\n')
+
+    if str((index+1)) in col_selecionadas_num:
+      print(f'\nVocê selecionou: {bold_underline}[{index+1}] - Voltar ao menu de tabelas{end_bold_underline}') 
+      return None, 'Tabelas'
+    if str((index+2)) in col_selecionadas_num:
+      print(f'\nVocê selecionou: {bold_underline}[{index+2}] - Voltar ao menu de ações{end_bold_underline}') 
+      return None, 'Ações'
     
     col_selecionadas_num = col_selecionadas_num + col_id
 
@@ -37,12 +47,12 @@ def escolher_colunas(tabela):
         if str(cont) in col_selecionadas_num:
           col_selecionadas_vetor.append(df_colunas.iloc[cont]['Coluna'])
 
-    print(f'\nAs colunas selecionadas foram: {bold_underline}{col_selecionadas_vetor}{end_bold_underline}') 
+    print(f'\nAs colunas que você selecionou foram: {bold_underline}{col_selecionadas_vetor}{end_bold_underline}') 
 
     # limpa o vetor pra ficar no formato da query do sql
-    col_selecionadas_query = str(col_selecionadas_vetor).replace('[', '').replace(']', '').replace('\'', '')
+    col_selecionadas_query = ', '.join(col_selecionadas_vetor)
 
-    return col_selecionadas_query, col_selecionadas_vetor
+    return col_selecionadas_query, None
 
 def colunas_all(tabela):
   # pega o nome das colunas, cria o menu, e pega o input 
@@ -57,4 +67,4 @@ def colunas_all(tabela):
 
     col_selecionadas_query = str(col_selecionadas_vetor).replace('[', '').replace(']', '').replace('\'', '')
 
-    return col_selecionadas_query, col_selecionadas_vetor
+    return col_selecionadas_query

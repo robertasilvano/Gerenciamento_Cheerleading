@@ -1,7 +1,29 @@
 import psycopg2
 import pandas as pd
 
+# faz a conexão com o banco
+def connect():
+    
+    # define a string de conexão
+    conn = psycopg2.connect(
+        database = 'cheer',
+        user = 'postgres',
+        password = 'dabdog',
+        host = 'localhost',
+        port = '5432'
+    )
 
+    # cria um cursor pra executar as querys
+    cursor = conn.cursor()
+
+    return conn, cursor
+
+# fecha a conexão com o banco
+def disconnect(conn, cursor):
+    cursor.close()
+    conn.close()
+
+# retorna o nome de todas as tabelas
 def get_table_names():
 
     # abre a conexão com o banco
@@ -14,15 +36,14 @@ def get_table_names():
     tabelas = cursor.fetchall()
 
     # transforma o resultado em um dataframe 
-    df_tabelas = pd.DataFrame(tabelas, columns=['Tabela']).sort_values('Tabela').reset_index()
+    df_tabelas = pd.DataFrame(tabelas, columns=['Tabela']).sort_values('Tabela').reset_index(drop=True)
+    df_tabelas.index = df_tabelas.index + 1
         
     # fecha a conexão com o banco
     disconnect(conn, cursor)
 
     return df_tabelas
 
-
-# seleciona as colunas da tabela escolhida
 def get_column_names(tabela):
 
     # abre a conexão com o banco
@@ -43,28 +64,8 @@ def get_column_names(tabela):
 
     return df_colunas
 
-def get_column_datatypes(tabela):
-
-    # abre a conexão com o banco
-    conn, cursor = connect()
-
-    # define a query para selecionar os nomes das colunas
-    query = f'SELECT column_name, data_type FROM information_schema.columns WHERE TABLE_NAME = \'{tabela}\''
-
-    # executa a query
-    cursor.execute(query)
-    colunas = cursor.fetchall()
-
-    # transforma o resultado em um dataframe 
-    df_datatype = pd.DataFrame(colunas, columns=['Coluna', 'Tipo'])
-        
-    # fecha a conexão com o banco
-    disconnect(conn, cursor)
-
-    return df_datatype
-
 # faz o select da tabela e colunas desejadas
-def select_query(query, col_selecionadas_vetor):
+def select(query, colunas):
 
     # abre a conexão com o banco
     conn, cursor = connect()
@@ -74,25 +75,13 @@ def select_query(query, col_selecionadas_vetor):
     select = cursor.fetchall()
 
     # transforma o resultado em um dataframe
-    df_select = pd.DataFrame(select, columns = col_selecionadas_vetor)
+    df_select = pd.DataFrame(select, columns=colunas)
+    df_select.columns = df_select.columns.str.upper()
     
     # fecha a conexão com o banco
     disconnect(conn, cursor)
 
     return df_select
-
-
-def insert_query(query, col_selecionadas_vetor):
-    # abre a conexão com o banco
-    conn, cursor = connect()
-
-    # executa a query
-    cursor.execute(query)
-    conn.commit()
-    print('Insert finalizado!')
-    
-    # fecha a conexão com o banco
-    disconnect(conn, cursor)
 
 def select_index(tabela):
      # abre a conexão com o banco
@@ -116,7 +105,7 @@ def select_index(tabela):
 
     return index
 
-def select_nome_descricao(query):
+def select_tabela_estrangeira(query, colunas):
 
      # abre a conexão com o banco
     conn, cursor = connect()
@@ -126,56 +115,47 @@ def select_nome_descricao(query):
     select = cursor.fetchall()
 
     # transforma o resultado em um dataframe
-    df_select = pd.DataFrame(select)
+    df_select = pd.DataFrame(select, columns=colunas)
+    df_select.columns = df_select.columns.str.upper()
     
     # fecha a conexão com o banco
     disconnect(conn, cursor)
 
     return df_select
 
-def update_query(query):
+def insert(query, col_selecionadas_vetor):
     # abre a conexão com o banco
     conn, cursor = connect()
 
     # executa a query
     cursor.execute(query)
     conn.commit()
-    print('Update finalizado!')
     
     # fecha a conexão com o banco
     disconnect(conn, cursor)
 
-def delete_query(query):
+    return
+
+def update(query):
     # abre a conexão com o banco
     conn, cursor = connect()
 
     # executa a query
     cursor.execute(query)
     conn.commit()
-    print('Delete concluído!')
     
     # fecha a conexão com o banco
     disconnect(conn, cursor)
 
+    return
 
-# faz a conexão com o banco
-def connect():
+def delete(query):
+    # abre a conexão com o banco
+    conn, cursor = connect()
+
+    # executa a query
+    cursor.execute(query)
+    conn.commit()
     
-    # define a string de conexão
-    conn = psycopg2.connect(
-        database = 'cheer',
-        user = 'postgres',
-        password = 'dabdog',
-        host = 'localhost',
-        port = '5432'
-    )
-
-    # cria um cursor pra executar as querys
-    cursor = conn.cursor()
-
-    return conn, cursor
-
-# fecha a conexão com o banco
-def disconnect(conn, cursor):
-    cursor.close()
-    conn.close()
+    # fecha a conexão com o banco
+    disconnect(conn, cursor)
