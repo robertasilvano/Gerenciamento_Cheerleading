@@ -49,7 +49,7 @@ def get_column_names(tabela):
     # abre a conexão com o banco
     conn, cursor = connect()
 
-    # define a query para selecionar os nomes das colunas
+    # define a query para selecionar os nomes de todas as colunas
     query = f'SELECT column_name FROM information_schema.columns WHERE TABLE_NAME = \'{tabela}\''
 
     # executa a query

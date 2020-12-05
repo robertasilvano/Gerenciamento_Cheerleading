@@ -27,15 +27,23 @@ def escolher_acao(tabela):
 
     acao_escolhida = int(input('\nEscolha a ação desejada: '))
 
+    # retorna ao menu de tabelas
     if acao_escolhida == 9:
         return 'Tabelas'
 
+    # executa de novo o menu de ações
     elif acao_escolhida < 1 or acao_escolhida > 9:
         print(f'\n{bold_underline}Opção inválida! Escolha novamente.{end_bold_underline}')
         return 'Play'
 
      # verifica qual ação foi escolhida e chama a função da mesma
     print(f'Você escolheu a opção {bold_underline}[{acao_escolhida}] - {acao_dict[acao_escolhida]}{end_bold_underline}')
+
+    # SE A AÇÃO FOR:
+    # select ou update: é necessário escolher sobre quais colunas vai querer executar a ação, e depois chama a ação
+    # insert: é necessário dar insert em todas as colunas, visto que todas são not null. então seleciona todas as colunas, e depois chama a ação
+    # delete:  não é necessário escolher colunas, então chama a ação
+    # consulta específica: define as querys e chama a ação
     if acao_escolhida == 1:
         colunas, flag = escolher_colunas(tabela)
 

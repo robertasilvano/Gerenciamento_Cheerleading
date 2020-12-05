@@ -20,4 +20,4 @@ def main():
     flag = 'Play'
     acao(tabela, flag)
 
-main() 
+main()

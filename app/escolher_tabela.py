@@ -15,9 +15,10 @@ def escolher_tabela():
         print(f'[{index}] - ' + row['Tabela'])
     print(f'[{qtd_tables+1}] - Sair')
     
+    # pega o input do usuário
     tabela_escolhida = int(input('\nEscolha a tabela desejada: '))
 
-    # trata valores inválidos
+    # trata os valores
     if tabela_escolhida == qtd_tables+1:
         print(f'Você escolheu [{tabela_escolhida}] - Sair')
         print('Encerrando o programa')
